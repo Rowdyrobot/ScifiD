@@ -18,27 +18,60 @@
 </div>
 
 <div class="main">
-	<h1>Base Template</h1>
+	<h1>Star Wars People</h1>
 	<h2>With you, may the force be</h2>
-<table id="swapi_results_table">
-  <tr>
-    <th>Name</th>
-    <th>Birthday</th>
-    <th>Home World</th>
-  </tr>
-  <tr>
-    <td>test</td>
-    <td>test</td>
-    <td>test</td>
-  </tr>
-  <tr>
-    <td>test</td>
-    <td>test</td>
-    <td>test</td>
-  </tr>
-</table>
-  <p></p>
+	<p></p>
+	<div id="resultsTable"></div>
 </div>
 
+<script>
+//grab the swapi people data
+fetch('https://swapi.co/api/people/')
+.then(response => response.json())
+.then(data => {
+  //build swapi people table
+  CreatePeople(data);
+})
+.catch(error => console.error(error))
+
+function CreatePeople(data) {	
+  var peopleCount = data.results.length;
+  
+  //get the header values from the results
+  var headVal = [];
+	for (var i = 0; i < peopleCount; i++) {
+		for (var key in data.results[i]) {
+			if (headVal.indexOf(key) === -1) {
+				if (key === "name" || key === "birth_year" || key === "homeworld") {
+					headVal.push(key);
+				}
+			}
+		}
+	}
+	
+	//create the header row
+	var resultsTable = document.createElement("table");
+	var tr = resultsTable.insertRow(-1);
+	for (var i = 0; i < headVal.length; i++) {
+		var th = document.createElement("th");
+		th.innerHTML = headVal[i];
+		tr.appendChild(th);
+	}
+	
+	//put all the values into the right columns
+	for (var i = 0; i < peopleCount; i++) {
+		tr = resultsTable.insertRow(-1);
+		for (var j = 0; j < headVal.length; j++) {
+			var dataField = tr.insertCell(-1);
+			dataField.innerHTML = data.results[i][headVal[j]];
+		}
+	}
+	
+	//stuff all of that into the div
+	var divResults = document.getElementById("resultsTable");
+	divResults.innerHTML = "";
+	divResults.appendChild(resultsTable);
+}
+</script>
 </body>
 </html>
