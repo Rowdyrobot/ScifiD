@@ -1,0 +1,58 @@
+
+body {margin:0;}
+
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #feda4a;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 28px;
+}
+
+.navbar a:hover {
+  color: #eee;
+}
+
+.navbar .favorites {
+	color: red;
+	float: right;
+	font-size: 21px;
+	margin-top: 3px;
+}
+
+.favorites .fave-count { 
+	color: #eee;
+	font-weight: 800;
+	font-size: 18px;
+}
+
+.main {
+  padding: 16px;
+  margin-top: 30px;
+  height: 1500px; /* Used in this example to enable scrolling */
+}
+
+table {
+  width: 100%;
+  border-spacing: 0;
+  border: 1px solid #ddd;
+}
+
+th, td {
+  text-align: left;
+  padding: 16px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
