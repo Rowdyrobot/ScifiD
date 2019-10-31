@@ -20,7 +20,7 @@
 <div class="main">
 	<h1>Star Wars People</h1>
 	<h2>With you, may the force be</h2>
-	<p></p>
+	<p><input id="txtSearch" type="text" placeholder="Search People"><button onclick="searchPeople()">Search</button></p>
 	<div id="resultsTable"></div>
 	<a href="javascript:prevPage()" id="btnPrev">&lt; Prev</a>
 	<a href="javascript:nextPage()" id="btnNext">Next &gt;</a>
@@ -32,11 +32,14 @@
 var currentPage = 1;
 var recordsPerPage = 10;
 var totalPages = 0;
-GetData(1);
+var baseURL = "https://swapi.co/api/people/";
+document.getElementById("txtSearch").value = "";
+var searchValue = "";
+GetData(baseURL);
 
-function GetData(currentPage) {
+function GetData(url) {
 //grab the swapi people data
-fetch('https://swapi.co/api/people/?page=' + currentPage)
+fetch(url)
 .then(response => response.json())
 .then(data => {
   //build swapi people table
@@ -110,7 +113,8 @@ function prevPage()
 {
     if (currentPage > 1) {
         currentPage--;
-        GetData(currentPage);
+		var url = baseURL + "?page=" + currentPage + "&search=" + searchValue;
+        GetData(url);
     }
 }
 
@@ -118,8 +122,16 @@ function nextPage()
 {
     if (currentPage < totalPages) {
         currentPage++;
-        GetData(currentPage);
+		var url = baseURL + "?page=" + currentPage + "&search=" + searchValue;
+        GetData(url);
     }
+}
+
+function searchPeople() {	
+	searchValue = document.getElementById("txtSearch").value;
+	var url = baseURL + "?search=" + searchValue;
+	currentPage = 1;
+    GetData(url);
 }
 
 </script>
