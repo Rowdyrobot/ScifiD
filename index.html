@@ -22,23 +22,40 @@
 	<h2>With you, may the force be</h2>
 	<p></p>
 	<div id="resultsTable"></div>
+	<a href="javascript:prevPage()" id="btnPrev">&lt; Prev</a>
+	<a href="javascript:nextPage()" id="btnNext">Next &gt;</a>
+	pg. <span id="pageNums"></span>
 </div>
 
 <script>
+
+var currentPage = 1;
+var recordsPerPage = 10;
+var totalPages = 0;
+GetData(1);
+
+function GetData(currentPage) {
 //grab the swapi people data
-fetch('https://swapi.co/api/people/')
+fetch('https://swapi.co/api/people/?page=' + currentPage)
 .then(response => response.json())
 .then(data => {
   //build swapi people table
   CreatePeople(data);
 })
 .catch(error => console.error(error))
+}
 
 function CreatePeople(data) {	
-  var peopleCount = data.results.length;
+	var btnNext = document.getElementById("btnNext");
+    var btnPrev = document.getElementById("btnPrev");
+    var pageNums = document.getElementById("pageNums");
+	var divResults = document.getElementById("resultsTable");
+	var peopleCount = data.results.length;
+	var totalCount = data.count;
+	totalPages= Math.ceil(totalCount / recordsPerPage);  
   
-  //get the header values from the results
-  var headVal = [];
+	//get the header values from the results
+	var headVal = [];
 	for (var i = 0; i < peopleCount; i++) {
 		for (var key in data.results[i]) {
 			if (headVal.indexOf(key) === -1) {
@@ -49,7 +66,24 @@ function CreatePeople(data) {
 		}
 	}
 	
-	//create the header row
+	//calibrate pageNums
+	if (pageNums < 1) pageNums = 1;
+    if (pageNums > totalPages) currentPage = totalPages;
+    pageNums.innerHTML = currentPage + "/" + totalPages;
+	if (currentPage == 1) {
+        btnPrev.style.visibility = "hidden";
+    } else {
+        btnPrev.style.visibility = "visible";
+    }
+
+    if (currentPage == totalPages) {
+        btnNext.style.visibility = "hidden";
+    } else {
+        btnNext.style.visibility = "visible";
+    }
+	
+	//create the header row; handle pagination
+	divResults.innerHTML = "";
 	var resultsTable = document.createElement("table");
 	var tr = resultsTable.insertRow(-1);
 	for (var i = 0; i < headVal.length; i++) {
@@ -68,10 +102,26 @@ function CreatePeople(data) {
 	}
 	
 	//stuff all of that into the div
-	var divResults = document.getElementById("resultsTable");
 	divResults.innerHTML = "";
 	divResults.appendChild(resultsTable);
 }
+
+function prevPage()
+{
+    if (currentPage > 1) {
+        currentPage--;
+        GetData(currentPage);
+    }
+}
+
+function nextPage()
+{
+    if (currentPage < totalPages) {
+        currentPage++;
+        GetData(currentPage);
+    }
+}
+
 </script>
 </body>
 </html>
