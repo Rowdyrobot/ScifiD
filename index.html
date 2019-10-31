@@ -14,16 +14,16 @@
 
 <div class="navbar">
 	<a href="#home">ScifiD</a>
-	<a href="#news" class="favorites"><i class="fa fa-heart"></i><sup class="fave-count">0</sup></a>
+	<a href="#faves" class="favorites"><i class="fa fa-heart"></i><sup class="fave-count">0</sup></a>
 </div>
 
 <div class="main">
 	<h1>Star Wars People</h1>
 	<h2>With you, may the force be</h2>
-	<p><input id="txtSearch" type="text" placeholder="Search People"><button onclick="searchPeople()">Search</button></p>
+	<p><input id="txtSearch" type="text" placeholder="Search People"><button onclick="SearchPeople()">Search</button></p>
 	<div id="resultsTable"></div>
-	<a href="javascript:prevPage()" id="btnPrev">&lt; Prev</a>
-	<a href="javascript:nextPage()" id="btnNext">Next &gt;</a>
+	<a href="javascript:PrevPage()" id="btnPrev">&lt; Prev</a>
+	<a href="javascript:NextPage()" id="btnNext">Next &gt;</a>
 	pg. <span id="pageNums"></span>
 </div>
 
@@ -31,21 +31,25 @@
 
 var currentPage = 1;
 var recordsPerPage = 10;
+var peopleCount = 0;
 var totalPages = 0;
+var searchValue = "";
+var homeworldSpan = "";
+var homeworldURLArr = [];
 var baseURL = "https://swapi.co/api/people/";
 document.getElementById("txtSearch").value = "";
-var searchValue = "";
+
 GetData(baseURL);
 
 function GetData(url) {
-//grab the swapi people data
-fetch(url)
-.then(response => response.json())
-.then(data => {
-  //build swapi people table
-  CreatePeople(data);
-})
-.catch(error => console.error(error))
+	//grab the swapi people data
+	fetch(url)
+	.then(response => response.json())
+	.then(data => {
+	  //build swapi people table
+	  CreatePeople(data);
+	})
+	.catch(error => console.error(error))
 }
 
 function CreatePeople(data) {	
@@ -53,8 +57,8 @@ function CreatePeople(data) {
     var btnPrev = document.getElementById("btnPrev");
     var pageNums = document.getElementById("pageNums");
 	var divResults = document.getElementById("resultsTable");
-	var peopleCount = data.results.length;
 	var totalCount = data.count;
+	peopleCount = data.results.length;
 	totalPages= Math.ceil(totalCount / recordsPerPage);  
   
 	//get the header values from the results
@@ -95,21 +99,53 @@ function CreatePeople(data) {
 		tr.appendChild(th);
 	}
 	
-	//put all the values into the right columns
+	//set all of the homeworld values to the correct name
+	homeworldURLArr = [];
+	for (var i = 0; i < peopleCount; i++) {	
+		homeworldURLArr.push(data.results[i][headVal[2]]);
+	}
+	
+	//put all the values into the proper columns
 	for (var i = 0; i < peopleCount; i++) {
 		tr = resultsTable.insertRow(-1);
 		for (var j = 0; j < headVal.length; j++) {
 			var dataField = tr.insertCell(-1);
-			dataField.innerHTML = data.results[i][headVal[j]];
+			if (j === 2)
+				dataField.innerHTML = "<span id=\"hw" + i + "\"></span>";
+			else
+				dataField.innerHTML = data.results[i][headVal[j]];
 		}
 	}
 	
 	//stuff all of that into the div
 	divResults.innerHTML = "";
 	divResults.appendChild(resultsTable);
+	FixHomeworld(peopleCount);
 }
 
-function prevPage()
+function FixHomeworld(peopleCount) {
+	for (var i = 0; i < peopleCount; i++) {	
+		var spanID = "hw" + i;
+		GetHomeWorldNames(spanID, homeworldURLArr[i], UpdateHomeWorldNames)
+	}
+}
+
+function GetHomeWorldNames(spanID, url, hwFunction) {
+	fetch(url)
+	.then(response => response.json())
+	.then(data => {
+		hwFunction(data, spanID);
+	})
+	.catch(error => console.error(error))
+}
+
+function UpdateHomeWorldNames(data, spanID) {
+	homeworldSpan = document.getElementById(spanID);
+	homeworldSpan.innerHTML = data.name;
+}
+
+
+function PrevPage()
 {
     if (currentPage > 1) {
         currentPage--;
@@ -118,7 +154,7 @@ function prevPage()
     }
 }
 
-function nextPage()
+function NextPage()
 {
     if (currentPage < totalPages) {
         currentPage++;
@@ -127,7 +163,7 @@ function nextPage()
     }
 }
 
-function searchPeople() {	
+function SearchPeople() {	
 	searchValue = document.getElementById("txtSearch").value;
 	var url = baseURL + "?search=" + searchValue;
 	currentPage = 1;
