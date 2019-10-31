@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="viewport"  content="text/html;charset=utf-8; width=device-width, initial-scale=1" http-equiv="Content-Type">
-<meta content="utf-8" http-equiv="encoding">
-<title>Science Fiction Database</title>
-<script src="https://kit.fontawesome.com/95cdfa4f7c.js" crossorigin="anonymous"></script>
+	<meta name="viewport"  content="text/html;charset=utf-8; width=device-width, initial-scale=1" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+	<title>Science Fiction Database</title>
+	<script src="https://kit.fontawesome.com/95cdfa4f7c.js" crossorigin="anonymous"></script>
+    <!-- simpleWebstorage by Zevero - https://github.com/zevero/simpleWebstorage -->
+    <script src="assets/js/simplestore.min.js"></script>
 	<link rel="stylesheet" href="assets/css/main.css">
-<style>
-/*try it here first*/
-</style>
+	<style>
+	/*try it here first*/
+	</style>
 </head>
 <body>
 
-<div class="navbar">
-	<a href="#home">ScifiD</a>
-	<a href="#faves" class="favorites"><i class="fas fa-heart"></i><sup id="supFaveCount" class="fave-count">0</sup></a>
-</div>
+	<div class="navbar">
+		<a href="#home">ScifiD</a>
+		<a href="favorites.html" class="favorites"><i class="fas fa-heart"></i><sup id="supFaveCount" class="fave-count">0</sup></a>
+	</div>
 
-<div class="main">
-	<h1>Star Wars People</h1>
-	<h2>With you, may the force be</h2>
-	<p><input id="txtSearch" type="text" placeholder="Search People"><button onclick="SearchPeople()">Search</button></p>
-	<div id="resultsTable"></div>
-	<a href="javascript:PrevPage()" id="btnPrev">&lt; Prev</a>
-	<a href="javascript:NextPage()" id="btnNext">Next &gt;</a>
-	pg. <span id="pageNums"></span>
-</div>
+	<div class="main">
+		<h1>Star Wars People</h1>
+		<h2>With you, may the force be</h2>
+		<p><input id="txtSearch" type="text" placeholder="Search People"><button onclick="SearchPeople()">Search</button></p>
+		<div id="resultsTable"></div>
+		<a href="javascript:PrevPage()" id="btnPrev">&lt; Prev</a>
+		<a href="javascript:NextPage()" id="btnNext">Next &gt;</a>
+		pg. <span id="pageNums"></span>
+	</div>
 
-<script src="assets/js/engine.js"></script>
-<script>
-//try it here first
-</script>
+	<script src="assets/js/engine.js"></script>
+	<script>
+	//try it here first
+	</script>
 </body>
 </html>

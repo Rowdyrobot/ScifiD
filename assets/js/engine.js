@@ -1,3 +1,6 @@
+/* ScifiD Engine by Jon Prevo */
+/* simpleWebStorage by Zevero */
+
 var currentPage = 1;
 var recordsPerPage = 10;
 var peopleCount = 0;
@@ -6,10 +9,34 @@ var faveCount = 0;
 var searchValue = "";
 var homeworldSpan = "";
 var homeworldURLArr = [];
+var faveList;
 var baseURL = "https://swapi.co/api/people/";
 document.getElementById("txtSearch").value = "";
 
+CheckLocalStorage();
+SetFavoritesCount();
 GetData(baseURL);
+
+function CheckLocalStorage() {
+	if(localStorage.has('faveList'))
+		faveList = localStorage.get('faveList');
+	else {
+		//localStorage.set('faveList', [{"name":"Han Solo","isfave":1,"order":1},{"name": "Luke Skywalker","isfave": 1,"order": 2},{"name": "Jar Jar Binks","isfave": 0,"order": 0}]);
+		localStorage.set('faveList', [{"name":"","isfave":0,"order":0}]);
+		faveList = localStorage.get('faveList');
+	}
+}
+
+function SetFavoritesCount() {
+    var totalFavorites = document.getElementById("supFaveCount");
+	var count = 0;
+	for (var f = 0; f < faveList.length; f++) {
+		if (faveList[f].isfave === 1)
+			count++
+	}
+	totalFavorites.innerHTML = count;
+	faveCount = count;
+}
 
 function GetData(url) {
 	//grab the swapi people data
@@ -77,23 +104,24 @@ function CreatePeople(data) {
 	
 	//put all the values into the proper columns
 	//TBD: add local storage for id and fave lookup
-	var switchOnOff = 0;
-	var nameCode = "";
+	
+	var faveCode = "";
 	for (var i = 0; i < peopleCount; i++) {
 		tr = resultsTable.insertRow(-1);
 		for (var j = 0; j < headVal.length; j++) {
-			var dataField = tr.insertCell(-1);
-			//need to add more based on the column id
-			if (switchOnOff === 0) {
-				nameCode = " <a href=\"javascript:AdjustCounter(" + switchOnOff + ")\"><i class=\"far fa-heart\"></i></a>";
-				switchOnOff = 1;
+			var dataField = tr.insertCell(-1);			
+			if (j === 0) {
+				for (var k = 0; k < faveList.length; k++) {
+					var personName = data.results[i][headVal[j]];
+					//console.log(faveList[k].name + " | " + personName);
+					faveCode = "<span id='" + personName + "'><a href=\"javascript:AdjustFavorite('" + personName + "',0)\"><i class=\"faveIcon far fa-heart\"></i></a></span> ";
+					if (faveList[k].name === personName && faveList[k].isfave === 1) {
+						faveCode = "<span id='" + personName + "'><a href=\"javascript:AdjustFavorite('" + personName + "'," + faveList[k].isfave + ")\"><i class=\"faveIcon fas fa-heart\"></i></a></span> ";
+						break;
+					}
+				}
+				dataField.innerHTML = faveCode + personName;
 			}
-			else {
-				nameCode = " <a href=\"javascript:AdjustCounter(" + switchOnOff + ")\"><i class=\"fas fa-heart\"></i></a>";
-				switchOnOff = 0;
-			}
-			if (j === 0)
-				dataField.innerHTML = data.results[i][headVal[j]] + nameCode;
 			else if (j === 2)
 				dataField.innerHTML = "<span id=\"hw" + i + "\"></span>";
 			else
@@ -154,11 +182,37 @@ function SearchPeople() {
     GetData(url);
 }
 
-function AdjustCounter(switchOnOff) {
+function AdjustFavorite(stringName, boolFave) {
     var totalFavorites = document.getElementById("supFaveCount");
-	if (switchOnOff === 0)
-		faveCount ++;
-	else
-		faveCount--;
+	var currentPerson = document.getElementById(stringName);
+	var foundInList = 0;
+	var newBool = 1;
+	var newIcon = "fas";
+	for (f in faveList) {
+		personName = faveList[f].name;
+		isFave = faveList[f].isfave;
+		if (personName === stringName) {
+			foundInList = 1;
+			if (boolFave === 0) {
+				faveList[f].isfave = 1;
+				faveCount ++;
+			}
+			else if (boolFave === 1){
+				faveList[f].isfave = 0;
+				faveCount --;
+				newBool = 0;
+				newIcon = "far";
+			}
+		}
+	}
+	
+	if(foundInList === 0) {
+			faveList.push({"name": stringName, "isfave": 1, "order": faveList.length + 1});
+			faveCount++;
+	}
+	
+	currentPerson.innerHTML = "<a href=\"javascript:AdjustFavorite('" + stringName + "'," + newBool + ")\"><i class=\"faveIcon " + newIcon + " fa-heart\"></i></a>";
+	
     totalFavorites.innerHTML = faveCount;	
+	localStorage.set('faveList', faveList);
 }
