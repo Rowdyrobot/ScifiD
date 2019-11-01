@@ -3,6 +3,7 @@
 
 var faveCount = 0;
 var faveList;
+var selected;
 
 CheckLocalStorage();
 SetFavorites();
@@ -23,7 +24,7 @@ function SetFavorites() {
 	var count = 0;
 	for (var f = 0; f < faveList.length; f++) {
 		if (faveList[f].isfave === 1) {
-			faveListText += "<li>" + faveList[f].name + "</li>";
+			faveListText += "<li draggable=\"true\" ondragend=\"DragEnd()\" ondragover=\"DragOver(event)\" ondragstart=\"DragStart(event)\">" + faveList[f].name + "</li>";
 			count++
 		}
 	}
@@ -31,4 +32,31 @@ function SetFavorites() {
 	divResults.innerHTML = faveListText;
 	totalFavorites.innerHTML = count;
 	faveCount = count;
+}
+
+function DragOver(e) {
+  if (IsBefore(selected, e.target)) 
+	  e.target.parentNode.insertBefore(selected, e.target);
+  else 
+	  e.target.parentNode.insertBefore(selected, e.target.nextSibling);
+}
+
+function DragEnd() {
+  selected = null;
+}
+
+function DragStart(e) {
+  e.dataTransfer.effectAllowed = "move";
+  e.dataTransfer.setData("text/plain", null);
+  selected = e.target;
+}
+
+function IsBefore(el1, el2) {
+  var cur;
+  if (el2.parentNode === el1.parentNode) {
+    for (cur = el1.previousSibling; cur; cur = cur.previousSibling) {
+      if (cur === el2) 
+		  return true;
+    }
+  } else return false;
 }
