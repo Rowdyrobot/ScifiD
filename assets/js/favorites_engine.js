@@ -15,6 +15,9 @@ function CheckLocalStorage() {
 		localStorage.set('faveList', [{"name":"","isfave":0,"order":0}]);
 		faveList = localStorage.get('faveList');
 	}
+	faveList.sort(function (a, b) {
+	return a.order - b.order;
+	});
 }
 
 function SetFavorites() {
@@ -22,6 +25,7 @@ function SetFavorites() {
 	var divResults = document.getElementById("resultsList");
 	var faveListText = "<ol id='olFaveList'>";
 	var count = 0;
+	//TBD: sort the list using the order value
 	for (var f = 0; f < faveList.length; f++) {
 		if (faveList[f].isfave === 1) {
 			faveListText += "<li id=\"" + f + "\" draggable=\"true\" ondragend=\"DragEnd()\" ondragover=\"DragOver(event)\" ondragstart=\"DragStart(event)\">" + faveList[f].name + "</li>";
