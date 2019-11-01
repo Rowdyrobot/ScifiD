@@ -20,11 +20,11 @@ function CheckLocalStorage() {
 function SetFavorites() {
     var totalFavorites = document.getElementById("supFaveCount");
 	var divResults = document.getElementById("resultsList");
-	var faveListText = "<ol>";
+	var faveListText = "<ol id='olFaveList'>";
 	var count = 0;
 	for (var f = 0; f < faveList.length; f++) {
 		if (faveList[f].isfave === 1) {
-			faveListText += "<li draggable=\"true\" ondragend=\"DragEnd()\" ondragover=\"DragOver(event)\" ondragstart=\"DragStart(event)\">" + faveList[f].name + "</li>";
+			faveListText += "<li id=\"" + f + "\" draggable=\"true\" ondragend=\"DragEnd()\" ondragover=\"DragOver(event)\" ondragstart=\"DragStart(event)\">" + faveList[f].name + "</li>";
 			count++
 		}
 	}
@@ -39,6 +39,7 @@ function DragOver(e) {
 	  e.target.parentNode.insertBefore(selected, e.target);
   else 
 	  e.target.parentNode.insertBefore(selected, e.target.nextSibling);
+	GetListIndexes();
 }
 
 function DragEnd() {
@@ -59,4 +60,17 @@ function IsBefore(el1, el2) {
 		  return true;
     }
   } else return false;
+}
+
+function GetListIndexes() {   
+    var ul = document.getElementById("olFaveList");
+	var liNodes = [];
+	var hasRecords = 0;
+	for (var i = 0; i < ul.childNodes.length; i++) {
+		if (ul.childNodes[i].nodeName == "LI") {
+			var listID = ul.childNodes[i].getAttribute("id");
+			faveList[listID].order = i;
+		}
+	}
+	localStorage.set('faveList', faveList);
 }
