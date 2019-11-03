@@ -61,6 +61,49 @@ tr:nth-child(even) {
 
 #txtSearch { font-size: 16px; }
 
+input[type=text] {
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.button {
+  background-color: #333;
+  border: none;
+  color: #feda4a;
+  padding: 13px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+li {
+  padding: 5px 10px;
+  background-color: #333;
+  color: #feda4a;
+  border: 1px solid #ddd;
+  width: 60%;
+}
+
+ol {
+  list-style: none;
+  counter-reset: my-awesome-counter;
+}
+ol li {
+  counter-increment: my-awesome-counter;
+}
+ol li::before {
+  content: counter(my-awesome-counter) ". ";
+  color: red;
+  font-weight: bold;
+}
+
 .easteregg { 
   color: #203030;
   cursor: pointer;
