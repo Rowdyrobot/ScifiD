@@ -59,6 +59,8 @@ tr:nth-child(even) {
 
 .faveIcon { color: red; }
 
+#txtSearch { font-size: 16px; }
+
 .easteregg { 
   color: #203030;
   cursor: pointer;

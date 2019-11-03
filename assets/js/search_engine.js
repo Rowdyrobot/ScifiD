@@ -238,12 +238,12 @@ var span = document.getElementsByClassName("close")[0];
 function BurnToast() {
     var x = document.getElementById("burntToast");
 	var y = document.getElementById("descToast");
-	var code = getSelfDestructCode();
+	var code = getSelfDestructCode();	
 	localStorage.set('easterEgg', code);
-	var displayCode = "Self Destruct Code<br>" + code;
+	var displayCode = "Self Destruct Code Activated<br>" + code;
 	y.innerHTML = displayCode;
     x.className = "show";
-    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+    setTimeout(function(){ x.className = x.className.replace("show", ""); document.getElementById("searchText").innerHTML = displayCode;  }, 5000);	
 }
 
 function getSelfDestructCode() {
