@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta name="viewport"  content="text/html;charset=utf-8; width=device-width, initial-scale=1" http-equiv="Content-Type">
+	<meta name="viewport" content="width=device-width, initial-scale=1" http-equiv="Content-Type">
 	<meta content="utf-8" http-equiv="encoding">
 	<title>Science Fiction Database</title>
 	<script src="https://kit.fontawesome.com/95cdfa4f7c.js" crossorigin="anonymous"></script>
@@ -9,13 +9,51 @@
     <script src="assets/js/simplestore.min.js"></script>
 	<link rel="stylesheet" href="assets/css/main.css">
 	<style>
-	/*try it here first*/
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  padding-top: 100px; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+  background-color: rgba(0,0,0,0);
+  margin: auto;
+  padding: 20px;
+  width: 250px;
+}
+
+.close {
+  color: #ccc;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #eee;
+  text-decoration: none;
+  cursor: pointer;
+}
 	</style>
 </head>
 <body>
-
+	<div id="selfDestruct" class="modal">
+	  <div class="modal-content">
+		<span class="close">&times;</span>
+		<p><img src="assets/img/death_star.gif" /></p>
+	  </div>
+	</div>
 	<div class="navbar">
 		<a href="index.html">ScifiD</a>
+		<a><span class="easteregg" onclick="BurnToast()"><i class="fab fa-empire"></i></span></a>
 		<a href="favorites.html" class="favorites"><i class="fas fa-heart"></i><sup id="supFaveCount" class="fave-count">0</sup></a>
 	</div>
 
@@ -23,15 +61,16 @@
 		<h1>Star Wars People</h1>
 		<h2>With you, may the force be</h2>
 		<p><input id="txtSearch" type="text" placeholder="Search People"><button onclick="SearchPeople()">Search</button></p>
+		<div id="searchText"></div>
 		<div id="resultsTable"></div>
 		<a href="javascript:PrevPage()" id="btnPrev">&lt; Prev</a>
 		<a href="javascript:NextPage()" id="btnNext">Next &gt;</a>
 		pg. <span id="pageNums"></span>
 	</div>
-
+	<div id="burntToast"><div id="imgToast"><i class="fab fa-empire"></i></div><div id="descToast"></div></div>
 	<script src="assets/js/search_engine.js"></script>
 	<script>
-	//try it here first
+
 	</script>
 </body>
 </html>

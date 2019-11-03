@@ -56,6 +56,11 @@ function CreatePeople(data) {
 	var divResults = document.getElementById("resultsTable");
 	var totalCount = data.count;
 	peopleCount = data.results.length;
+	if (peopleCount === 0) {		
+		divResults.innerHTML = "<p>Nobody's Home</p>";
+		return;
+	}
+		
 	totalPages= Math.ceil(totalCount / recordsPerPage);  
   
 	//get the header values from the results
@@ -177,6 +182,17 @@ function NextPage()
 
 function SearchPeople() {	
 	searchValue = document.getElementById("txtSearch").value;
+	document.getElementById("searchText").innerHTML = "Search Results for '" + searchValue + "'";
+	document.getElementById("txtSearch").value = "";
+	if (localStorage.has('easterEgg')) {
+		easterEgg = localStorage.get('easterEgg');
+		if (searchValue === easterEgg) {
+			localStorage.removeItem('easterEgg');
+			document.getElementById("searchText").innerHTML = "";
+			ShowSelfDestruction();
+			return;
+		}
+	}
 	var url = baseURL + "?search=" + searchValue;
 	currentPage = 1;
     GetData(url);
@@ -215,4 +231,39 @@ function AdjustFavorite(stringName, boolFave) {
 	
     totalFavorites.innerHTML = faveCount;	
 	localStorage.set('faveList', faveList);
+}
+
+var modal = document.getElementById("selfDestruct");
+var span = document.getElementsByClassName("close")[0];
+function BurnToast() {
+    var x = document.getElementById("burntToast");
+	var y = document.getElementById("descToast");
+	var code = getSelfDestructCode();
+	localStorage.set('easterEgg', code);
+	var displayCode = "Self Destruct Code<br>" + code;
+	y.innerHTML = displayCode;
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+}
+
+function getSelfDestructCode() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+function ShowSelfDestruction() {
+	var modal = document.getElementById("selfDestruct");
+	modal.style.display = "block";
+}
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
 }
